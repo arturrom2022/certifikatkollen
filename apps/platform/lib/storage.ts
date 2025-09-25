@@ -23,9 +23,10 @@ export function getProjects(): Project[] {
   if (typeof window === "undefined") return []
   return safeParse<Project[]>(localStorage.getItem(PROJECTS_KEY), []).map(
     (p) => ({
-      members: [],
-      status: "active",
+      // sprid först, sätt sedan default utan att duplicera nycklar
       ...p,
+      status: p.status ?? "active",
+      members: Array.isArray(p.members) ? p.members : [],
     })
   )
 }
@@ -47,7 +48,7 @@ export function addProject(input: Partial<Project>): Project {
     endDate: input.endDate ?? "",
     status: input.status ?? "active",
     description: input.description ?? "",
-    members: input.members ?? [],
+    members: Array.isArray(input.members) ? input.members : [],
   }
   saveProjects([p, ...list])
   return p
