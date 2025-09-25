@@ -233,8 +233,7 @@ export default function ProjectDetailPage() {
             onChange={(v) => onField("status", v)}
             options={[
               { value: "active", label: "Pågående" },
-              { value: "completed", label: "Avslutat" },
-              { value: "archived", label: "Arkiverat" },
+              { value: "closed", label: "Avslutat" },
             ]}
           />
         </div>
