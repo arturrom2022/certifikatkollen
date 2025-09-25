@@ -1,14 +1,16 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { addCertificate, getEmployees } from "@/lib/storage"
 import type { Employee, Certificate } from "@/lib/types"
 
 export default function CertificateForm({
   onCreated,
+  actions, // ✅ NYTT: valfri egen actions-render
 }: {
   onCreated?: () => void
+  actions?: ReactNode
 }) {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -120,7 +122,6 @@ export default function CertificateForm({
     }
 
     addCertificate(employeeId, payload)
-
     window.dispatchEvent(new StorageEvent("storage", { key: "employees" }))
 
     setName("")
@@ -240,21 +241,26 @@ export default function CertificateForm({
         </div>
       </div>
 
-      <div className="flex justify-end gap-3">
-        <button
-          type="button"
-          onClick={handleCancel}
-          className="rounded-xl border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
-        >
-          Avbryt
-        </button>
-        <button
-          type="submit"
-          className="rounded-xl bg-gray-900 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-800"
-        >
-          Spara
-        </button>
-      </div>
+      {/* ✅ Om 'actions' skickas in från sidan används den, annars visas standardknapparna */}
+      {actions ? (
+        <div className="flex justify-end gap-3">{actions}</div>
+      ) : (
+        <div className="flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="rounded-xl border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
+          >
+            Avbryt
+          </button>
+          <button
+            type="submit"
+            className="rounded-xl bg-gray-900 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-800"
+          >
+            Spara
+          </button>
+        </div>
+      )}
     </form>
   )
 }
