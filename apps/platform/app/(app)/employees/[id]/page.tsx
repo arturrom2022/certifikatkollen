@@ -197,7 +197,7 @@ export default function EmployeeDetailPage() {
   }
 
   function onDeleteCert(certId: string) {
-    if (!emp) return // ✅ skydda mot null
+    if (!emp) return // null-guard
     if (confirm("Ta bort certifikat?")) {
       removeCertificate(emp.id, certId)
       setEmp((prev) =>
@@ -271,22 +271,20 @@ export default function EmployeeDetailPage() {
   return (
     <main className="space-y-6">
       <PageHeader
-        title={
-          <span className="inline-flex items-center gap-2">
-            <span>{emp.name}</span>
-            {isArchived && (
-              <span className="inline-block rounded-full border px-2 py-0.5 text-[10px] leading-4 border-gray-300 bg-gray-100 text-gray-700">
-                Arkiverat
-              </span>
-            )}
-          </span>
-        }
+        title={emp.name}
         breadcrumbs={[
           { label: "Anställda", href: "/employees" },
           { label: emp.name },
         ]}
         actions={
           <div className="flex gap-2 items-center">
+            {/* Badge flyttad hit för att title ska vara string */}
+            {isArchived && (
+              <span className="inline-block rounded-full border px-2 py-0.5 text-[10px] leading-4 border-gray-300 bg-gray-100 text-gray-700">
+                Arkiverat
+              </span>
+            )}
+
             {/* Tillbaka */}
             <Link
               href="/employees"
@@ -519,7 +517,9 @@ export default function EmployeeDetailPage() {
                     </div>
                     <div>
                       Giltigt till:{" "}
-                      <span className={expiryClass}>{c.expiryDate || "—"}</span>
+                      <span className="text-gray-700">
+                        {c.expiryDate || "—"}
+                      </span>
                     </div>
                   </div>
 
