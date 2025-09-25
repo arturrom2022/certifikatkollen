@@ -1,11 +1,12 @@
 // app/employees/new/page.tsx
 "use client"
 
+import { Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import EmployeeForm from "@/components/EmployeeForm"
 import PageHeader from "@/components/PageHeader"
 
-export default function NewEmployeePage() {
+function NewEmployeePageInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -59,5 +60,13 @@ export default function NewEmployeePage() {
         />
       </div>
     </main>
+  )
+}
+
+export default function NewEmployeePage() {
+  return (
+    <Suspense fallback={null}>
+      <NewEmployeePageInner />
+    </Suspense>
   )
 }

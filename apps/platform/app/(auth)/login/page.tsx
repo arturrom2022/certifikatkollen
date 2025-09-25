@@ -1,7 +1,7 @@
 // app/(auth)/login/page.tsx
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import type { Route } from "next"
 import PageHeader from "@/components/PageHeader"
@@ -12,7 +12,7 @@ type FormState = {
   remember: boolean
 }
 
-export default function LoginPage() {
+function LoginPageInner() {
   const router = useRouter()
   const search = useSearchParams()
   const returnToRaw = search.get("returnTo") || "/"
@@ -363,5 +363,13 @@ export default function LoginPage() {
         </>
       )}
     </main>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageInner />
+    </Suspense>
   )
 }

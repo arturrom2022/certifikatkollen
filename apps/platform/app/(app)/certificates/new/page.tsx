@@ -1,11 +1,12 @@
 // app/certificates/new/page.tsx
 "use client"
 
+import { Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import CertificateForm from "@/components/CertificateForm"
 import PageHeader from "@/components/PageHeader"
 
-export default function NewCertificatePage() {
+function NewCertificatePageInner() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -60,5 +61,13 @@ export default function NewCertificatePage() {
         />
       </div>
     </main>
+  )
+}
+
+export default function NewCertificatePage() {
+  return (
+    <Suspense fallback={null}>
+      <NewCertificatePageInner />
+    </Suspense>
   )
 }

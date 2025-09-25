@@ -1,11 +1,12 @@
 // app/projects/new/page.tsx
 "use client"
 
+import { Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import PageHeader from "@/components/PageHeader"
 import ProjectForm from "@/components/ProjectForm"
 
-export default function NewProjectPage() {
+function NewProjectPageInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -59,5 +60,13 @@ export default function NewProjectPage() {
         />
       </div>
     </main>
+  )
+}
+
+export default function NewProjectPage() {
+  return (
+    <Suspense fallback={null}>
+      <NewProjectPageInner />
+    </Suspense>
   )
 }
