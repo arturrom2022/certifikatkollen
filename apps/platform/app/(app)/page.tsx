@@ -78,7 +78,8 @@ export default function OverviewPage() {
       type: "employee" as const,
       id: e.id,
       name: e.name,
-      date: e.createdAt ?? e.certificates[0]?.issueDate,
+      // minimal fix: Employee-typen saknar createdAt – använd any-cast + fallback
+      date: (e as any).createdAt ?? e.certificates[0]?.issueDate ?? "",
     })),
     ...projects.map((p) => ({
       type: "project" as const,
