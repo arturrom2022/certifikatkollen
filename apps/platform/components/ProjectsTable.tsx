@@ -14,7 +14,7 @@ import type { Project } from "@/lib/types"
 import FilterBar, { type Option } from "@/components/FilterBar"
 import HeaderCell from "@/components/table/HeaderCell"
 
-type Filter = "active" | "closed" | "all"
+type Filter = "active" | "completed" | "all"
 type SortKey = "name" | "customer" | null
 type SortDir = "asc" | "desc"
 
@@ -148,7 +148,7 @@ export default function ProjectsTable({
 
   function closeProject(id: string) {
     if (!confirm("Avsluta projekt?")) return
-    setProjectStatus(id, "closed")
+    setProjectStatus(id, "completed")
     setSelectedIds((prev) => {
       const next = new Set(prev)
       next.delete(id)
@@ -271,7 +271,7 @@ export default function ProjectsTable({
   function closeSelected() {
     if (selectedIds.size === 0) return
     if (!confirm("Avsluta valda projekt?")) return
-    for (const id of Array.from(selectedIds)) setProjectStatus(id, "closed")
+    for (const id of Array.from(selectedIds)) setProjectStatus(id, "completed")
     setSelectedIds(new Set())
     refresh()
   }
@@ -294,7 +294,7 @@ export default function ProjectsTable({
   const statusOptions: Option[] = [
     { value: "all", label: "Alla" },
     { value: "active", label: "Pågående" },
-    { value: "closed", label: "Avslutade" },
+    { value: "completed", label: "Avslutade" },
   ]
 
   const filtersDisabled = selectedIds.size > 0
