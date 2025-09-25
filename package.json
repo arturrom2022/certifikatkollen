@@ -1,12 +1,16 @@
 {
-  "name": "kompetensspar-monorepo",
+  "name": "certifikatkollen",
   "private": true,
   "version": "0.1.0",
+  "packageManager": "pnpm@9.9.0",
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "pnpm -r --parallel --filter ./apps/* run dev",
-    "build": "pnpm -r --filter ./apps/* run build",
-    "start": "pnpm -r --parallel --filter ./apps/* run start",
-    "lint": "pnpm -r --filter ./apps/* run lint",
+    "dev": "pnpm -r --parallel --filter \"./apps/*\" run dev",
+    "build": "pnpm -r --filter \"./apps/*\" run build",
+    "start": "pnpm -r --parallel --filter \"./apps/*\" run start",
+    "lint": "pnpm -r --filter \"./apps/*\" run lint",
     "fmt": "prettier --write ."
   },
   "devDependencies": {
