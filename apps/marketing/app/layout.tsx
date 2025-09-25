@@ -1,6 +1,5 @@
-// apps/marketing/app/layout.tsx
 import type { Metadata } from "next"
-import "./globals.css" // skapa filen i steg 2 (eller ta bort raden om du inte vill ha global css än)
+import "./globals.css" // du kan ta bort den här raden om du inte vill ha global CSS
 
 export const metadata: Metadata = {
   title: "Certifikatkollen – Hemsida",
