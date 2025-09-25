@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import type { Route } from "next"
 import PageHeader from "@/components/PageHeader"
 
 type FormState = {
@@ -14,7 +15,10 @@ type FormState = {
 export default function LoginPage() {
   const router = useRouter()
   const search = useSearchParams()
-  const returnTo = search.get("returnTo") || "/"
+  const returnToRaw = search.get("returnTo") || "/"
+  const returnTo: Route = returnToRaw.startsWith("/")
+    ? (returnToRaw as Route)
+    : ("/" as Route)
 
   const [form, setForm] = useState<FormState>({
     username: "",
@@ -116,8 +120,8 @@ export default function LoginPage() {
           mode === "login"
             ? "Logga in"
             : mode === "reset"
-            ? "Återställ lösenord"
-            : "Skapa konto"
+              ? "Återställ lösenord"
+              : "Skapa konto"
         }
       />
 
