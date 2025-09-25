@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import type { Route } from "next"
 
 function IconHome({ className = "h-5 w-5" }) {
   return (
@@ -97,7 +98,7 @@ export default function HeaderNav({ className = "" }: { className?: string }) {
         return (
           <Link
             key={item.href}
-            href={item.href}
+            href={item.href as Route}
             aria-current={active ? "page" : undefined}
             className={[
               "flex items-center min-h-9 gap-2 rounded-xl px-3 py-2 text-sm font-semibold tracking-tight transition",
