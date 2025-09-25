@@ -197,6 +197,7 @@ export default function EmployeeDetailPage() {
   }
 
   function onDeleteCert(certId: string) {
+    if (!emp) return // ✅ skydda mot null
     if (confirm("Ta bort certifikat?")) {
       removeCertificate(emp.id, certId)
       setEmp((prev) =>
