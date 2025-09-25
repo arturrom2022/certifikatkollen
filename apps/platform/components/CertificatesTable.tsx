@@ -235,7 +235,7 @@ export default function CertificatesTable({
             ...e,
             certificates: e.certificates.map((c) =>
               selectedMap.get(e.id)!.has(c.id)
-                ? { ...c, status: "archived" }
+                ? { ...c, status: "archived" as const }
                 : c
             ),
           }
@@ -773,7 +773,7 @@ export default function CertificatesTable({
                                     ...e,
                                     certificates: e.certificates.map((c) =>
                                       c.id === certId
-                                        ? { ...c, status: "archived" }
+                                        ? { ...c, status: "archived" as const }
                                         : c
                                     ),
                                   }
