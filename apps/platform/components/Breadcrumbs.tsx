@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import type { Route } from "next"
 
 type Crumb = {
   label: string
@@ -23,6 +24,9 @@ export default function Breadcrumbs({
     >
       {items.map((item, i) => {
         const isLast = i === items.length - 1
+        const safeHref: Route | null =
+          item.href && item.href.startsWith("/") ? (item.href as Route) : null
+
         return (
           <span key={i} className="flex items-center">
             {i > 0 && (
@@ -30,13 +34,13 @@ export default function Breadcrumbs({
                 ›
               </span>
             )}
-            {isLast || !item.href ? (
+            {isLast || !safeHref ? (
               <span className="truncate text-gray-700 font-medium">
                 {item.label}
               </span>
             ) : (
               <Link
-                href={item.href}
+                href={safeHref}
                 className="truncate text-gray-500 hover:text-gray-900"
               >
                 {item.label}
