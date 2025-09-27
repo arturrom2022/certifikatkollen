@@ -1,28 +1,29 @@
-// apps/platform/types/next-auth.d.ts
-import "next-auth"
-import "next-auth/jwt"
+import NextAuth, { DefaultSession } from "next-auth"
+import { JWT } from "next-auth/jwt"
 
 declare module "next-auth" {
+  type Role = "admin" | "manager" | "member" | "read_only"
+
   interface Session {
-    user?: {
+    user: {
       id?: string
-      name?: string | null
-      email?: string | null
-      image?: string | null
-      role?: "admin" | "manager" | "member" | "read_only"
+      role?: Role
       orgId?: string
-    }
+    } & DefaultSession["user"]
   }
+
   interface User {
-    role?: "admin" | "manager" | "member" | "read_only"
+    role?: Role
     orgId?: string
   }
 }
 
 declare module "next-auth/jwt" {
+  type Role = "admin" | "manager" | "member" | "read_only"
+
   interface JWT {
     userId?: string
-    role?: "admin" | "manager" | "member" | "read_only"
+    role?: Role
     orgId?: string
   }
 }
