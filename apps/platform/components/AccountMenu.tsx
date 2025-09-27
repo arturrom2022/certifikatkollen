@@ -4,7 +4,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useSession, signOut } from "next-auth/react"  // v5 stöder detta
+import { useSession, signOut } from "next-auth/react"
 
 type Role = "admin" | "manager" | "member" | "read_only" | undefined
 type CurrentUser = {

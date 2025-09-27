@@ -1,12 +1,13 @@
-// apps/platform/auth.config.ts
-import type { Session, User } from "next-auth"
+// imports överst
+import type { NextAuthOptions, User, Session } from "next-auth"
 import type { JWT } from "next-auth/jwt"
 import Credentials from "next-auth/providers/credentials"
 import { prisma } from "@/lib/db"
 import bcrypt from "bcryptjs"
 
-export const authConfig = {
-  session: { strategy: "jwt" as const },
+// Exporten ska ha v4-typen:
+export const authConfig: NextAuthOptions = {
+  session: { strategy: "jwt" }, // 'jwt' är korrekt i v4
   providers: [
     Credentials({
       name: "Credentials",
@@ -26,7 +27,6 @@ export const authConfig = {
           },
         })
         if (!user?.passwordHash) return null
-
         const ok = await bcrypt.compare(password, user.passwordHash)
         if (!ok) return null
 
@@ -37,21 +37,21 @@ export const authConfig = {
           image: user.image ?? null,
           role: user.members[0]?.role,
           orgId: user.members[0]?.orgId,
-        } satisfies User
+        } as unknown as User
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User | null }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
-        token.userId = (user as any).id
-        if ((user as any).role) token.role = (user as any).role
-        if ((user as any).orgId) token.orgId = (user as any).orgId
+        ;(token as any).userId = (user as any).id
+        if ((user as any).role) (token as any).role = (user as any).role
+        if ((user as any).orgId) (token as any).orgId = (user as any).orgId
       }
       return token
     },
     async session({ session, token }: { session: Session; token: JWT }) {
-      ;(session.user as any) ??= {}
+      session.user = session.user ?? {}
       ;(session.user as any).id = (token as any).userId
       if ((token as any).role) (session.user as any).role = (token as any).role
       if ((token as any).orgId)
@@ -59,4 +59,4 @@ export const authConfig = {
       return session
     },
   },
-} satisfies import("next-auth").NextAuthConfig
+}
