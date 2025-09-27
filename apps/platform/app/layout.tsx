@@ -1,6 +1,7 @@
-// app/layout.tsx
+// apps/platform/app/layout.tsx
 import "./globals.css"
 import type { Metadata } from "next"
+import Providers from "@/components/Providers" // ⬅️ default-import (fix)
 
 export const metadata: Metadata = {
   title: "Kompetensspårning – Frontend",
@@ -15,7 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="sv" className="h-full">
-      <body className="min-h-screen flex flex-col">{children}</body>
+      <body className="min-h-screen flex flex-col">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }

@@ -1,3 +1,4 @@
+// app/ClientAuthGate.tsx
 "use client"
 
 import { useEffect } from "react"
@@ -27,7 +28,6 @@ export default function ClientAuthGate() {
 
     const hasSession = () => {
       try {
-        // Stöd båda nycklarna
         const a = localStorage.getItem("auth:user")
         const b = localStorage.getItem("currentUser")
         return Boolean(a || b)
@@ -44,10 +44,8 @@ export default function ClientAuthGate() {
       }
     }
 
-    // initial check
     enforce()
 
-    // lyssna på session-förändringar mellan flikar
     const onStorage = (e: StorageEvent) => {
       if (!e.key || e.key === "auth:user" || e.key === "currentUser") {
         enforce()
@@ -55,7 +53,6 @@ export default function ClientAuthGate() {
     }
     window.addEventListener("storage", onStorage)
 
-    // när fliken får fokus – kolla igen
     const onVis = () => {
       if (document.visibilityState === "visible") enforce()
     }

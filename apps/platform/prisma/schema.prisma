@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+  // Klienten genereras i denna app
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// ===== Auth.js (NextAuth v5) standardtabeller =====
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String?  @unique
+  image         String?
+  // Egen kolumn för credentials-login:
+  passwordHash  String?
+  createdAt     DateTime @default(now())
+
+  accounts      Account[]
+  sessions      Session[]
+  members       OrgMember[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  oauth_token_secret String?
+  oauth_token       String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+/// ===== Multi-tenant =====
+model Org {
+  id         String      @id @default(cuid())
+  name       String
+  createdAt  DateTime    @default(now())
+  createdBy  String
+  members    OrgMember[]
+  invites    OrgInvite[]
+}
+
+enum OrgRole {
+  admin
+  manager
+  member
+  read_only
+}
+
+model OrgMember {
+  orgId   String
+  userId  String
+  role    OrgRole  @default(member)
+  joinedAt DateTime @default(now())
+
+  org   Org   @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([orgId, userId])
+}
+
+model OrgInvite {
+  id        String   @id @default(cuid())
+  orgId     String
+  email     String
+  role      OrgRole
+  token     String   @unique
+  expiresAt DateTime
+  invitedBy String
+  acceptedAt DateTime?
+
+  org Org @relation(fields: [orgId], references: [id], onDelete: Cascade)
+}

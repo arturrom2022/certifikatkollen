@@ -8,12 +8,20 @@
   ],
   "scripts": {
     "dev": "pnpm -r --parallel --filter \"./apps/*\" run dev",
+    "dev:platform": "pnpm --filter platform dev",
+    "dev:marketing": "pnpm --filter marketing dev",
     "build": "pnpm -r --filter \"./apps/*\" run build",
-    "start": "pnpm -r --parallel --filter \"./apps/*\" run start",
+    "start:platform": "pnpm -F platform start",
+    "start:marketing": "pnpm -F marketing start",
     "lint": "pnpm -r --filter \"./apps/*\" run lint",
-    "fmt": "prettier --write ."
+    "fmt": "prettier --write .",
+    "db:generate": "pnpm --filter platform run db:generate",
+    "db:push": "pnpm --filter platform run db:push",
+    "db:migrate": "pnpm --filter platform run db:migrate",
+    "db:studio": "pnpm --filter platform run db:studio"
   },
   "devDependencies": {
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "prisma": "^6.16.2"
   }
 }

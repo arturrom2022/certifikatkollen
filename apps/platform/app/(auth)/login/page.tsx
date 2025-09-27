@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import type { Route } from "next"
 import PageHeader from "@/components/PageHeader"
+import { signIn } from "next-auth/react"
 
 type FormState = {
   username: string
@@ -40,8 +41,9 @@ function LoginPageInner() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem("auth:user")
-      if (raw) router.replace(returnTo)
+      const a = localStorage.getItem("auth:user")
+      const b = localStorage.getItem("currentUser")
+      if (a || b) router.replace(returnTo)
     } catch {}
   }, [router, returnTo])
 
@@ -53,63 +55,77 @@ function LoginPageInner() {
     e.preventDefault()
     setError(null)
 
-    const username = form.username.trim()
+    const email = form.username.trim()
     const password = form.password.trim()
-
-    if (!username) return setError("Ange ditt användarnamn.")
+    if (!email) return setError("Ange din e-post.")
     if (!password) return setError("Ange ditt lösenord.")
 
-    try {
-      setLoading(true)
-      const looksLikeEmail = /@/.test(username)
-      const payload = {
-        name: username,
-        email: looksLikeEmail ? username : undefined,
-        createdAt: new Date().toISOString(),
-      }
-      localStorage.setItem("auth:user", JSON.stringify(payload))
-      try {
-        window.dispatchEvent(new StorageEvent("storage", { key: "auth:user" }))
-      } catch {}
-      router.replace(returnTo)
-    } catch {
-      setError("Kunde inte slutföra inloggningen. Försök igen.")
-    } finally {
-      setLoading(false)
+    setLoading(true)
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+      callbackUrl: returnTo,
+    })
+
+    setLoading(false)
+
+    if (res?.error) {
+      setError("Fel e-post eller lösenord.")
+      return
     }
+    // Vid lyckad inloggning
+    router.replace(returnTo)
   }
 
   function onResetSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
     if (!resetEmail) return setError("Ange din e-postadress.")
-    // Här kopplar du backend senare
     alert(`Länk för återställning skickad till ${resetEmail}`)
     setMode("login")
   }
 
-  function onSignupSubmit(e: React.FormEvent) {
+  async function onSignupSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
     const { company, name, email, password } = signup
+
     if (!company.trim()) return setError("Ange företagsnamn.")
     if (!name.trim()) return setError("Ange ditt namn.")
-    if (!email.trim() || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
-      return setError("Ange en giltig e-postadress.")
+    if (!email.trim()) return setError("Ange en giltig e-postadress.")
     if (!password.trim() || password.length < 6)
-      return setError("Lösenord måste vara minst 6 tecken.")
+      return setError("Minst 6 tecken.")
 
-    // Demo: ”skapa konto” loggar in direkt
-    const payload = {
-      org: company.trim(),
-      name: name.trim(),
-      email: email.trim(),
-      createdAt: new Date().toISOString(),
+    // 1) Skapa user + org i backend
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        company: company.trim(),
+        name: name.trim(),
+        email: email.trim(),
+        password,
+      }),
+    })
+
+    if (!res.ok) {
+      const j = await res.json().catch(() => ({}))
+      setError(j?.error ?? "Kunde inte skapa konto.")
+      return
     }
-    localStorage.setItem("auth:user", JSON.stringify(payload))
-    try {
-      window.dispatchEvent(new StorageEvent("storage", { key: "auth:user" }))
-    } catch {}
+
+    // 2) Logga in direkt
+    const s = await signIn("credentials", {
+      email: email.trim(),
+      password,
+      redirect: false,
+      callbackUrl: returnTo,
+    })
+    if (s?.error) {
+      setError("Konto skapat, men inloggning misslyckades – prova logga in.")
+      return
+    }
     router.replace(returnTo)
   }
 
