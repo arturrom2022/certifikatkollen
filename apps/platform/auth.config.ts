@@ -1,14 +1,12 @@
 // apps/platform/auth.config.ts
-import type { NextAuthConfig, Session, User } from "next-auth"
+import type { Session, User } from "next-auth"
 import type { JWT } from "next-auth/jwt"
 import Credentials from "next-auth/providers/credentials"
 import { prisma } from "@/lib/db"
 import bcrypt from "bcryptjs"
 
-// Använd gärna "satisfies" så får du fel om configen avviker:
 export const authConfig = {
   session: { strategy: "jwt" as const },
-
   providers: [
     Credentials({
       name: "Credentials",
@@ -24,10 +22,7 @@ export const authConfig = {
         const user = await prisma.user.findUnique({
           where: { email },
           include: {
-            members: {
-              select: { orgId: true, role: true },
-              take: 1,
-            },
+            members: { select: { orgId: true, role: true }, take: 1 },
           },
         })
         if (!user?.passwordHash) return null
@@ -46,7 +41,6 @@ export const authConfig = {
       },
     }),
   ],
-
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: User | null }) {
       if (user) {
@@ -56,13 +50,13 @@ export const authConfig = {
       }
       return token
     },
-
     async session({ session, token }: { session: Session; token: JWT }) {
-      // session.user finns alltid (via module augmentation ovan)
-      ;(session.user as any).id = token.userId
-      if (token.role) (session.user as any).role = token.role
-      if (token.orgId) (session.user as any).orgId = token.orgId
+      ;(session.user as any) ??= {}
+      ;(session.user as any).id = (token as any).userId
+      if ((token as any).role) (session.user as any).role = (token as any).role
+      if ((token as any).orgId)
+        (session.user as any).orgId = (token as any).orgId
       return session
     },
   },
-} satisfies NextAuthConfig
+} satisfies import("next-auth").NextAuthConfig
