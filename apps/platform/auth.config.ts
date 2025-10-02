@@ -1,20 +1,20 @@
-import CredentialsProvider from "next-auth/providers/credentials"
-import type { Session } from "next-auth"
+// apps/platform/auth.config.ts
+import type { NextAuthOptions, Session, User } from "next-auth"
 import type { JWT } from "next-auth/jwt"
+import Credentials from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/db"
 
-export const authConfig = {
+const authConfig: NextAuthOptions = {
   session: { strategy: "jwt" },
-
   providers: [
-    CredentialsProvider({
+    Credentials({
       name: "Credentials",
       credentials: {
         email: { label: "E-post", type: "email" },
         password: { label: "Lösenord", type: "password" },
       },
-      async authorize(creds) {
+      async authorize(creds): Promise<User | null> {
         const email = (creds?.email || "").toString().trim().toLowerCase()
         const password = (creds?.password || "").toString()
         if (!email || !password) return null
@@ -25,28 +25,19 @@ export const authConfig = {
         const ok = await bcrypt.compare(password, user.passwordHash)
         if (!ok) return null
 
-        // returnera minsta möjliga user-objekt
         return {
           id: user.id,
           name: user.name ?? null,
           email: user.email ?? null,
-        } as any
+        } as User
       },
     }),
   ],
-
   callbacks: {
-    async jwt({
-      token,
-      user,
-    }: {
-      token: JWT & { userId?: string }
-      user?: { id?: string | null } | null
-    }) {
-      if (user?.id) token.userId = user.id
+    async jwt({ token, user }: { token: JWT; user?: User | null }) {
+      if (user) (token as any).userId = (user as any).id
       return token
     },
-
     async session({
       session,
       token,
@@ -55,10 +46,10 @@ export const authConfig = {
       token: JWT & { userId?: string }
     }) {
       session.user = (session.user ?? {}) as Session["user"]
-      ;(session.user as any).id = token.userId
+      ;(session.user as any).id = (token as any).userId
       return session
     },
   },
-} as const
+}
 
 export default authConfig

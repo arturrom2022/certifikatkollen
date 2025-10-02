@@ -1,12 +1,4 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "next-auth/next"
 import authConfig from "./auth.config"
 
-/**
- * Använd i server actions / route handlers:
- *   const session = await auth()
- */
-export function auth() {
-  return getServerSession(authConfig)
-}
-
-export type { DefaultSession } from "next-auth"
+export const auth = () => getServerSession(authConfig)
