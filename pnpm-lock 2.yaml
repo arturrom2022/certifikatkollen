@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@prisma/client':
-        specifier: 6.16.2
-        version: 6.16.2(prisma@6.16.2(typescript@5.6.2))(typescript@5.6.2)
     devDependencies:
       prettier:
         specifier: ^3.3.3
@@ -55,9 +51,9 @@ importers:
       '@auth/prisma-adapter':
         specifier: ^2.10.0
         version: 2.10.0(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.5.4))(typescript@5.5.4))
-      '@next/env':
-        specifier: ^15.5.4
-        version: 15.5.4
+      '@prisma/client':
+        specifier: 6.16.2
+        version: 6.16.2(prisma@6.16.2(typescript@5.5.4))(typescript@5.5.4)
       bcryptjs:
         specifier: ^3.0.2
         version: 3.0.2
@@ -77,9 +73,6 @@ importers:
         specifier: ^4.1.11
         version: 4.1.11
     devDependencies:
-      '@prisma/client':
-        specifier: 6.16.2
-        version: 6.16.2(prisma@6.16.2(typescript@5.5.4))(typescript@5.5.4)
       '@types/bcryptjs':
         specifier: ^3.0.0
         version: 3.0.0
@@ -92,9 +85,6 @@ importers:
       autoprefixer:
         specifier: 10.4.20
         version: 10.4.20(postcss@8.4.41)
-      dotenv:
-        specifier: ^17.2.2
-        version: 17.2.2
       postcss:
         specifier: 8.4.41
         version: 8.4.41
@@ -156,9 +146,6 @@ packages:
 
   '@next/env@14.2.5':
     resolution: {integrity: sha512-/zZGkrTOsraVfYjGP8uM0p6r0BDT6xWpkjdVbcz66PJVSpwXX3yNiRycxAuDfBKGWBrZBXRuK/YVlkNgxHGwmA==}
-
-  '@next/env@15.5.4':
-    resolution: {integrity: sha512-27SQhYp5QryzIT5uO8hq99C69eLQ7qkzkDPsk3N+GuS2XgOgoYEeOav7Pf8Tn4drECOVDsDg8oj+/DVy8qQL2A==}
 
   '@next/swc-darwin-arm64@14.2.5':
     resolution: {integrity: sha512-/9zVxJ+K9lrzSGli1///ujyRfon/ZneeZ+v4ptpiPoOU+GKZnm8Wj8ELWU1Pm7GHltYRBklmXMTUqM/DqQ99FQ==}
@@ -436,10 +423,6 @@ packages:
 
   dotenv@16.6.1:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
-    engines: {node: '>=12'}
-
-  dotenv@17.2.2:
-    resolution: {integrity: sha512-Sf2LSQP+bOlhKWWyhFsn0UsfdK/kCWRv1iuA2gXAwt3dyNabr6QSj00I2V10pidqz69soatm9ZwZvpQMTIOd5Q==}
     engines: {node: '>=12'}
 
   eastasianwidth@0.2.0:
@@ -1035,8 +1018,6 @@ snapshots:
 
   '@next/env@14.2.5': {}
 
-  '@next/env@15.5.4': {}
-
   '@next/swc-darwin-arm64@14.2.5':
     optional: true
 
@@ -1085,11 +1066,6 @@ snapshots:
     optionalDependencies:
       prisma: 6.16.2(typescript@5.5.4)
       typescript: 5.5.4
-
-  '@prisma/client@6.16.2(prisma@6.16.2(typescript@5.6.2))(typescript@5.6.2)':
-    optionalDependencies:
-      prisma: 6.16.2(typescript@5.6.2)
-      typescript: 5.6.2
 
   '@prisma/config@6.16.2':
     dependencies:
@@ -1287,8 +1263,6 @@ snapshots:
   dlv@1.1.3: {}
 
   dotenv@16.6.1: {}
-
-  dotenv@17.2.2: {}
 
   eastasianwidth@0.2.0: {}
 

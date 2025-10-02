@@ -1,10 +1,9 @@
+// apps/platform/app/api/auth/signup/route.ts
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import bcrypt from "bcryptjs"
 import { prisma } from "@/lib/db"
-// ⬇️ BYT DETTA …
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library"
-// … OCH TA BORT ev. `import { Prisma } from "@prisma/client"`
 
 const schema = z.object({
   company: z.string().min(2),
@@ -54,7 +53,6 @@ export async function POST(req: Request) {
       { status: 201 }
     )
   } catch (e: unknown) {
-    // ⬇️ UPPDATERAD FELHANTERING
     if (e instanceof z.ZodError) {
       return NextResponse.json(
         { error: e.issues[0]?.message ?? "Ogiltiga fält" },
@@ -69,7 +67,6 @@ export async function POST(req: Request) {
         )
       }
     }
-
     console.error("Signup error:", e)
     return NextResponse.json(
       { error: "Internt fel vid skapande av konto." },

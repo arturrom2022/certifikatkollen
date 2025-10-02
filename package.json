@@ -18,10 +18,14 @@
     "db:generate": "pnpm --filter platform run db:generate",
     "db:push": "pnpm --filter platform run db:push",
     "db:migrate": "pnpm --filter platform run db:migrate",
-    "db:studio": "pnpm --filter platform run db:studio"
+    "db:studio": "pnpm --filter platform run db:studio",
+    "postinstall": "pnpm -C apps/platform prisma generate --schema prisma/schema.prisma"
   },
   "devDependencies": {
     "prettier": "^3.3.3",
     "prisma": "^6.16.2"
+  },
+  "dependencies": {
+    "@prisma/client": "6.16.2"
   }
 }
